@@ -58,7 +58,7 @@ This section explains the purpose of every file and folder in this repository, s
 ```
 ├── .github/workflows/     # GitHub Actions
 ├── dist/                  # Built files (generated)
-├── docs                   # Documentation files
+├── docs/                  # Documentation files
 ├── examples/              # Usage examples
 ├── scripts/               # Build and release scripts
 │   ├── dev.ps1            # Development tasks (PowerShell)
