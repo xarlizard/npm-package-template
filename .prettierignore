@@ -1,0 +1,13 @@
+# Prettier ignore file
+node_modules/
+dist/
+build/
+coverage/
+*.min.js
+*.min.css
+package-lock.json
+yarn.lock
+.git/
+.github/
+CHANGELOG.md
+LICENSE
