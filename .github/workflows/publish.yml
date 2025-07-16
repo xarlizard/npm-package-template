@@ -1,0 +1,166 @@
+name: Publish Package
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build package
+        run: npm run build
+
+  publish-npm:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Publish to NPM (with fallback to scoped name)
+        run: |
+          # Backup original package.json
+          cp package.json package.json.backup
+          
+          # Try publishing with original name first
+          ORIGINAL_NAME=$(node -p "require('./package.json').name")
+          echo "📦 Attempting to publish with original name: $ORIGINAL_NAME"
+          
+          if npm publish; then
+            echo "✅ Successfully published with original name: $ORIGINAL_NAME"
+          else
+            echo "❌ Failed to publish with original name, trying with scoped name..."
+            # Restore backup
+            mv package.json.backup package.json
+            
+            # Create scoped version using GitHub username
+            node -e "
+              const pkg = require('./package.json');
+              const owner = process.env.GITHUB_REPOSITORY.split('/')[0];
+              const originalName = pkg.name.replace(/^@[^/]+\//, ''); // Remove existing scope if any
+              pkg.name = \`@\${owner}/\${originalName}\`;
+              pkg.publishConfig = { 
+                access: 'public',
+                registry: 'https://registry.npmjs.org'
+              };
+              console.log(\`📦 Retrying with scoped name: \${pkg.name}\`);
+              require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+            "
+            
+            SCOPED_NAME=$(node -p "require('./package.json').name")
+            echo "🚀 Publishing scoped package: $SCOPED_NAME"
+            
+            if npm publish; then
+              echo "✅ Successfully published with scoped name: $SCOPED_NAME"
+              echo "💡 Users can install with: npm install $SCOPED_NAME"
+            else
+              echo "❌ Failed to publish even with scoped name: $SCOPED_NAME"
+              echo "🔍 Please check NPM_TOKEN permissions and package configuration"
+              exit 1
+            fi
+          fi
+          
+          # Always restore original package.json if backup exists
+          if [ -f package.json.backup ]; then
+            mv package.json.backup package.json
+            echo "🔄 Restored original package.json"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-github:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          registry-url: "https://npm.pkg.github.com"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build package
+        run: npm run build
+
+      - name: Configure package for GitHub
+        run: |
+          # Create a temporary package.json for GitHub publishing
+          cp package.json package.json.backup
+          node -e "
+            const pkg = require('./package.json');
+            const owner = process.env.GITHUB_REPOSITORY.split('/')[0];
+            const repoName = process.env.GITHUB_REPOSITORY.split('/')[1];
+            
+            // Use the repository name for GitHub Packages to avoid URL encoding issues
+            pkg.name = \`@\${owner}/\${repoName}\`;
+            pkg.publishConfig = {
+              registry: 'https://npm.pkg.github.com',
+              access: 'public'
+            };
+            
+            console.log(\`📦 Publishing to GitHub Packages as: \${pkg.name}\`);
+            console.log(\`🎯 Repository: \${process.env.GITHUB_REPOSITORY}\`);
+            require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+          "
+
+      - name: Publish to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Restore package.json
+        run: mv package.json.backup package.json
