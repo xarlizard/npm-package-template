@@ -6,9 +6,9 @@ updates:
     schedule:
       interval: "daily"
     reviewers:
-      - "YOUR_USERNAME"
+      - "xarlizard"
     assignees:
-      - "YOUR_USERNAME"
+      - "xarlizard"
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -27,9 +27,9 @@ updates:
     schedule:
       interval: "weekly"
     reviewers:
-      - "YOUR_USERNAME"
+      - "xarlizard"
     assignees:
-      - "YOUR_USERNAME"
+      - "xarlizard"
     commit-message:
       prefix: "ci"
       include: "scope"
