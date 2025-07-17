@@ -16,7 +16,7 @@
   "files": [
     ".github/ISSUE_TEMPLATE",
     ".github/workflows",
-    ".github/pull_request_template,md",
+    ".github/pull_request_template.md",
     "dist",
     "templates",
     "README.md",
