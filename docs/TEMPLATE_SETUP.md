@@ -2,11 +2,22 @@
 
 Follow these steps to customize this template for your package:
 
-## 1. Package Information
+## 1. Templates Folder
 
-### Update package.json
+The `templates/` folder contains blank starter files for your new package. Start by copying these files into your project root and filling them out with your own information:
 
-Replace the following placeholders:
+- `README.md`: Your package's main documentation. Update with your package name, usage, and details.
+- `CHANGELOG.md`: Track changes and releases for your package. Follow semantic versioning and keep a changelog format.
+- `CONTRIBUTING.md`: Guidelines for contributing to your package. Add your contribution rules and process.
+- `LICENSE`: Your package's license (default is MIT). Update with your name and year if needed.
+- `package.json`: Example configuration to start from. Replace all placeholders (`YOUR_USERNAME`, `YOUR_PACKAGE_NAME`, etc.) with your actual info.
+- `dependabot.yml`: Example Dependabot configuration for automated dependency updates. Update reviewers/assignees as needed.
+
+Copy and edit these files as needed to match your package's requirements. Do not edit the template's own files—always start from the ones in `templates/`.
+
+## 2. Package Information
+
+Update the copied `package.json` from `templates/` with your actual information:
 
 - `YOUR_USERNAME` → Your GitHub username
 - `YOUR_PACKAGE_NAME` → Your package name
@@ -35,7 +46,7 @@ Replace the following placeholders:
 }
 ```
 
-## 2. GitHub Repository Setup
+## 3. GitHub Repository Setup
 
 ### Required Secrets
 
@@ -49,7 +60,7 @@ Add these to your GitHub repository settings → Secrets and variables → Actio
 - Set up branch protection rules for main branch
 - Configure issue templates (optional)
 
-## 3. Code Structure
+## 4. Code Structure
 
 ### Main Entry Point
 
@@ -69,27 +80,34 @@ Update `src/types.ts` with your actual type definitions.
 
 Update tests in `src/__tests__/` to match your actual functions.
 
-## 4. Documentation
+## 5. Documentation
 
-### README.md
-
+### README.md (from `templates/README.md`)
 - Update title and description
 - Replace feature list with your actual features
 - Update installation instructions
 - Add your API documentation
 - Update examples
 
-### CHANGELOG.md
-
+### CHANGELOG.md (from `templates/CHANGELOG.md`)
 - Keep the format but update with your actual changes
 - Follow semantic versioning
+
+### CONTRIBUTING.md (from `templates/CONTRIBUTING.md`)
+- Add your contribution guidelines and process
+
+### LICENSE (from `templates/LICENSE`)
+- Update with your name and year if needed
+
+### dependabot.yml (from `templates/dependabot.yml`)
+- Update reviewers and assignees to your GitHub username or team
 
 ### Examples
 
 - Replace `examples/README.md` with actual usage examples
 - Add code samples for common use cases
 
-## 5. Configuration
+## 6. Configuration
 
 ### Dependencies
 
@@ -120,7 +138,7 @@ Update `jest.config.json` if you need different test settings:
 - Coverage settings
 - Setup files
 
-## 6. Publishing
+## 7. Publishing
 
 ### First Release
 
@@ -136,9 +154,9 @@ The workflow will automatically:
 
 - Run tests and build
 - Publish to NPM registry
-- Publish to GitHub Packages with `@username/package-name` scope
+- Publish to GitHub Packages with `@YOUR_USERNAME/YOUR_PACKAGE_NAME` scope
 
-## 7. Cleanup
+## 8. Cleanup
 
 After customization:
 
@@ -147,7 +165,7 @@ After customization:
 3. Update or remove example tests
 4. Remove placeholder content from README.md
 
-## 8. Optional Enhancements
+## 9. Optional Enhancements
 
 ### Add More Tools
 
@@ -167,6 +185,15 @@ After customization:
 - **API documentation**: TSDoc + documentation generator
 - **GitHub Wiki**: Extended documentation
 - **GitHub Pages**: Package website
+
+## 10. Protect Main Branch
+
+To ensure repository safety and code quality, add the ruleset from `templates/Protect main.json` to your repository settings. This will:
+- Protect the `main` branch from direct commits and force pushes
+- Require all changes to go through pull requests
+- Enforce best practices for collaboration and code review
+
+Follow GitHub's documentation to import the ruleset and apply it to your repository.
 
 ## Need Help?
 
