@@ -18,6 +18,7 @@
     ".github/workflows",
     ".github/pull_request_template.md",
     "dist",
+    "docs",
     "templates",
     "README.md",
     "LICENSE",
