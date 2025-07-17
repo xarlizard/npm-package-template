@@ -1,6 +1,6 @@
 # NPM Package Template 📦
 
-[![npm version](https://badge.fury.io/js/npm-package-template.svg)](https://badge.fury.io/js/npm-package-template)
+[![npm version](https://badge.fury.io/js/@xarlizard%2Fnpm-package-template.svg)](https://badge.fury.io/js/@xarlizard%2Fnpm-package-template)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![CI/CD](https://github.com/xarlizard/npm-package-template/actions/workflows/publish.yml/badge.svg)](https://github.com/xarlizard/npm-package-template/actions/workflows/publish.yml)
@@ -48,6 +48,7 @@ npm install
 ```bash
 npm install @xarlizard/npm-package-template --save-dev
 ```
+> **ℹ️ Missing files**: By donwloading it directly as an npm-package, you will miss out on a lot of files, be sure to check the official github URL to see all available ones!
 
 ## 📚 Repository File Reference
 
@@ -69,6 +70,7 @@ This section explains the purpose of every file and folder in this repository, s
 │   ├── index.ts           # Main entry point
 │   ├── types.ts           # Type definitions
 │   └── utils.ts           # Utility functions
+├── templates/             # Template files with blank fields
 ├── .eslintrc.json         # ESLint configuration.
 ├── .gitignore             # Git ignore patterns.
 ├── .npmignore             # Files to exclude from NPM package.
@@ -89,11 +91,11 @@ This section explains the purpose of every file and folder in this repository, s
 
 ### Documentation (`docs/`)
 
-- **DEPENDABOT.md**: Automated dependency updates via `.github/dependabot.yml`.
-- **ISSUE_TEMPLATES.md**: Issue templates in `.github/ISSUE_TEMPLATE/`.
-- **PULL_REQUEST_TEMPLATE.md**: Pull request template in `.github/pull_request_template.md`.
-- **TEMPLATE_SETUP.md**: Step-by-step guide for customizing this template.
-- **WORKFLOWS.md**: Details all GitHub Actions workflows in `.github/workflows/`.
+- [**DEPENDABOT.md**](./docs/DEPENDABOT.md): Automated dependency updates via `.github/dependabot.yml`.
+- [**ISSUE_TEMPLATES.md**](./docs/ISSUE_TEMPLATES.md): Issue templates in `.github/ISSUE_TEMPLATE/`.
+- [**PULL_REQUEST_TEMPLATE.md**](./docs/PULL_REQUEST_TEMPLATE.md): Pull request template in `.github/pull_request_template.md`.
+- [**TEMPLATE_SETUP.md**](./docs/TEMPLATE_SETUP.md): Step-by-step guide for customizing this template.
+- [**WORKFLOWS.md**](./docs/WORKFLOWS.md): Details all GitHub Actions workflows in `.github/workflows/`.
 
 ### Source Code (`src/`)
 

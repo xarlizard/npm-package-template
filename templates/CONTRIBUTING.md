@@ -80,8 +80,8 @@ Documentation improvements are always welcome:
 1. **Fork and Clone**
 
    ```bash
-   git clone https://github.com/xarlizard/npm-package-template.git
-   cd npm-package-template
+   git clone https://github.com/YOUR_USERNAME/YOUR_PACKAGE_NAME.git
+   cd YOUR_PACKAGE_NAME
    ```
 
 2. **Install Dependencies**
@@ -110,7 +110,7 @@ Documentation improvements are always welcome:
    mkdir test-install
    cd test-install
    npm init -y
-   npm install ../npm-package-template-*.tgz
+   npm install ../YOUR_PACKAGE_NAME-*.tgz
    ```
 
 ### Project Structure
