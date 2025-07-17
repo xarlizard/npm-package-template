@@ -1,6 +1,6 @@
 {
   "name": "npm-package-template",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A comprehensive TypeScript npm package template with automated publishing, testing, and modern tooling",
   "type": "module",
   "main": "dist/index.cjs",
@@ -14,7 +14,11 @@
     }
   },
   "files": [
+    ".github/ISSUE_TEMPLATE",
+    ".github/workflows",
+    ".github/pull_request_template,md",
     "dist",
+    "templates",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"
