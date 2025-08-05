@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![CI/CD](https://github.com/xarlizard/npm-package-template/actions/workflows/publish.yml/badge.svg)](https://github.com/xarlizard/npm-package-template/actions/workflows/publish.yml)
+[![Production Deployment](https://github.com/xarlizard/npm-package-template/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/xarlizard/npm-package-template/actions/workflows/deploy.yml)
 [![Coverage](https://codecov.io/gh/xarlizard/npm-package-template/branch/main/graph/badge.svg)](https://codecov.io/gh/xarlizard/npm-package-template)
 
 A comprehensive, production-ready TypeScript npm package template with automated publishing, testing, and modern
@@ -48,7 +49,9 @@ npm install
 ```bash
 npm install @xarlizard/npm-package-template --save-dev
 ```
-> **ℹ️ Missing files**: By donwloading it directly as an npm-package, you will miss out on a lot of files, be sure to check the official github URL to see all available ones!
+
+> **ℹ️ Missing files**: By donwloading it directly as an npm-package, you will miss out on a lot of files, be sure to
+> check the official github URL to see all available ones!
 
 ## 📚 Repository File Reference
 
@@ -93,7 +96,8 @@ This section explains the purpose of every file and folder in this repository, s
 
 - [**DEPENDABOT.md**](./docs/DEPENDABOT.md): Automated dependency updates via `.github/dependabot.yml`.
 - [**ISSUE_TEMPLATES.md**](./docs/ISSUE_TEMPLATES.md): Issue templates in `.github/ISSUE_TEMPLATE/`.
-- [**PULL_REQUEST_TEMPLATE.md**](./docs/PULL_REQUEST_TEMPLATE.md): Pull request template in `.github/pull_request_template.md`.
+- [**PULL_REQUEST_TEMPLATE.md**](./docs/PULL_REQUEST_TEMPLATE.md): Pull request template in
+  `.github/pull_request_template.md`.
 - [**TEMPLATE_SETUP.md**](./docs/TEMPLATE_SETUP.md): Step-by-step guide for customizing this template.
 - [**WORKFLOWS.md**](./docs/WORKFLOWS.md): Details all GitHub Actions workflows in `.github/workflows/`.
 
