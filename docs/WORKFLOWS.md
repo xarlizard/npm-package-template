@@ -86,4 +86,4 @@ Marks production deployments in the GitHub UI for visibility. Does not perform a
 ## Usage
 
 - To use, push to the `main` branch. The badge will update automatically.
-- Customize the workflow to add real deployment steps if required.
+- Customize the workflow to add real deployment steps if required, and seet the URL to your desired deployment URL.
