@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
 [![CI/CD](https://github.com/YOUR_USERNAME/YOUR_PACKAGE_NAME/actions/workflows/publish.yml/badge.svg)](https://github.com/YOUR_USERNAME/YOUR_PACKAGE_NAME/actions/workflows/publish.yml)
+[![Production Deployment](https://github.com/YOUR_USERNAME/YOUR_PACKAGE_NAME/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/YOUR_USERNAME/YOUR_PACKAGE_NAME/actions/workflows/deploy.yml)
 
 A short description of your package goes here.
 
