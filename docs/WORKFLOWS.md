@@ -67,3 +67,23 @@ Runs security analysis on the codebase using GitHub CodeQL and dependency review
 
 - No configuration needed. The workflow is reusable and works for any JavaScript/TypeScript repo.
 - To customize languages or schedule, edit `.github/workflows/security.yml`.
+
+# Deploy Workflow (`.github/workflows/deploy.yml`)
+
+## Purpose
+
+Marks production deployments in the GitHub UI for visibility. Does not perform any real deployment by default—add your own deployment steps as needed.
+
+## When It Runs
+
+- On every push to the `main` branch.
+
+## What It Does
+
+- Sets the environment to `production` and displays a deployment badge in the GitHub UI.
+- Includes a placeholder step for deployment (customize as needed).
+
+## Usage
+
+- To use, push to the `main` branch. The badge will update automatically.
+- Customize the workflow to add real deployment steps if required.
