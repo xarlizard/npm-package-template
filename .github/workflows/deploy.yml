@@ -13,7 +13,7 @@ jobs:
       url: https://your-deployment-url.com
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: Build and Deploy
         run: echo "This is a template. Add your deployment command here, e.g., npm run deploy, scp, rsync, or a cloud CLI."
