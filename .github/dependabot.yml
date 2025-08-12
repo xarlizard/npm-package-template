@@ -19,7 +19,10 @@ updates:
     # Ignore major version updates for stability
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+        update-types: 
+          - "version-update:semver-major"
+          - "version-update:semver-patch"
+
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
