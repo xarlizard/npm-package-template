@@ -5,8 +5,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    reviewers:
-      - "YOUR_USERNAME"
     assignees:
       - "YOUR_USERNAME"
     commit-message:
@@ -19,15 +17,15 @@ updates:
     # Ignore major version updates for stability
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-patch"
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "YOUR_USERNAME"
     assignees:
       - "YOUR_USERNAME"
     commit-message:
