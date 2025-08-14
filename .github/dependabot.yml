@@ -5,8 +5,6 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    reviewers:
-      - "xarlizard"
     assignees:
       - "xarlizard"
     commit-message:
@@ -29,8 +27,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    reviewers:
-      - "xarlizard"
     assignees:
       - "xarlizard"
     commit-message:
