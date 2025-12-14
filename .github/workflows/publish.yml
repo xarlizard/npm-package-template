@@ -46,6 +46,9 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -62,23 +65,53 @@ jobs:
       - name: Build package
         run: npm run build
 
-      - name: Publish to NPM (with fallback to scoped name)
+      - name: Publish to NPM (Trusted Publishing with NPM_TOKEN fallback)
         run: |
           # Backup original package.json
           cp package.json package.json.backup
           
-          # Try publishing with original name first
-          ORIGINAL_NAME=$(node -p "require('./package.json').name")
-          echo "📦 Attempting to publish with original name: $ORIGINAL_NAME"
+          # Function to try publishing with current package.json
+          try_publish() {
+            local package_name=$(node -p "require('./package.json').name")
+            echo "📦 Attempting to publish: $package_name"
+            
+            if npm publish; then
+              echo "✅ Successfully published: $package_name"
+              return 0
+            else
+              echo "❌ Failed to publish: $package_name"
+              return 1
+            fi
+          }
           
-          if npm publish; then
-            echo "✅ Successfully published with original name: $ORIGINAL_NAME"
+          # Function to setup token authentication
+          setup_token_auth() {
+            if [ -n "$NPM_TOKEN" ]; then
+              echo "🔑 Setting up NPM_TOKEN authentication..."
+              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+              return 0
+            else
+              echo "⚠️  NPM_TOKEN not available, skipping token authentication"
+              return 1
+            fi
+          }
+          
+          PUBLISH_SUCCESS=false
+          AUTH_METHOD="Trusted Publishing (OIDC)"
+          
+          # Step 1: Try with original name using Trusted Publishing
+          ORIGINAL_NAME=$(node -p "require('./package.json').name")
+          echo "🔐 Using authentication method: $AUTH_METHOD"
+          
+          if try_publish; then
+            PUBLISH_SUCCESS=true
+            echo "✅ Published using $AUTH_METHOD"
           else
-            echo "❌ Failed to publish with original name, trying with scoped name..."
+            echo "⚠️  Trusted Publishing failed, trying with scoped name..."
             # Restore backup
             mv package.json.backup package.json
             
-            # Create scoped version using GitHub username
+            # Step 2: Try with scoped name using Trusted Publishing
             node -e "
               const pkg = require('./package.json');
               const owner = process.env.GITHUB_REPOSITORY.split('/')[0];
@@ -92,16 +125,41 @@ jobs:
               require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
             "
             
-            SCOPED_NAME=$(node -p "require('./package.json').name")
-            echo "🚀 Publishing scoped package: $SCOPED_NAME"
-            
-            if npm publish; then
-              echo "✅ Successfully published with scoped name: $SCOPED_NAME"
-              echo "💡 Users can install with: npm install $SCOPED_NAME"
+            if try_publish; then
+              PUBLISH_SUCCESS=true
+              echo "✅ Published using $AUTH_METHOD with scoped name"
             else
-              echo "❌ Failed to publish even with scoped name: $SCOPED_NAME"
-              echo "🔍 Please check NPM_TOKEN permissions and package configuration"
-              exit 1
+              echo "⚠️  Trusted Publishing failed, attempting fallback to NPM_TOKEN..."
+              
+              # Step 3: Fallback to NPM_TOKEN if available
+              if setup_token_auth; then
+                AUTH_METHOD="NPM_TOKEN (fallback)"
+                # Restore original package.json and try again
+                mv package.json.backup package.json
+                
+                if try_publish; then
+                  PUBLISH_SUCCESS=true
+                  echo "✅ Published using $AUTH_METHOD"
+                else
+                  # Try scoped name with token
+                  node -e "
+                    const pkg = require('./package.json');
+                    const owner = process.env.GITHUB_REPOSITORY.split('/')[0];
+                    const originalName = pkg.name.replace(/^@[^/]+\//, '');
+                    pkg.name = \`@\${owner}/\${originalName}\`;
+                    pkg.publishConfig = { 
+                      access: 'public',
+                      registry: 'https://registry.npmjs.org'
+                    };
+                    require('fs').writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+                  "
+                  
+                  if try_publish; then
+                    PUBLISH_SUCCESS=true
+                    echo "✅ Published using $AUTH_METHOD with scoped name"
+                  fi
+                fi
+              fi
             fi
           fi
           
@@ -110,8 +168,26 @@ jobs:
             mv package.json.backup package.json
             echo "🔄 Restored original package.json"
           fi
+          
+          # Final check
+          if [ "$PUBLISH_SUCCESS" = false ]; then
+            echo "❌ Failed to publish with all authentication methods"
+            echo ""
+            echo "🔍 Troubleshooting:"
+            echo "1. Ensure Trusted Publishing is enabled in your npm account:"
+            echo "   https://www.npmjs.com/settings/YOUR_USERNAME/access-tokens"
+            echo "2. Verify the workflow path matches: .github/workflows/publish.yml"
+            echo "3. Alternatively, set NPM_TOKEN secret in repository settings"
+            echo "4. Check package name availability and permissions"
+            exit 1
+          fi
+          
+          SCOPED_NAME=$(node -p "require('./package.json').name" 2>/dev/null || echo "$ORIGINAL_NAME")
+          if [[ "$SCOPED_NAME" == @* ]]; then
+            echo "💡 Users can install with: npm install $SCOPED_NAME"
+          fi
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-github:
     needs: test

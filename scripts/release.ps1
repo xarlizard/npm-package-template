@@ -67,11 +67,12 @@ try {
     Write-Host "Next steps:" -ForegroundColor Cyan
     Write-Host "1. Push the changes: git push && git push --tags" -ForegroundColor White
     Write-Host "2. Create a GitHub release to trigger automated publishing" -ForegroundColor White
-    Write-Host "3. Or publish manually with: npm publish" -ForegroundColor White
+    Write-Host "   (Uses Trusted Publishing - no tokens needed!)" -ForegroundColor Gray
+    Write-Host "3. Or publish manually with: npm publish (requires npm login)" -ForegroundColor White
     Write-Host ""
     Write-Host "To publish to GitHub Packages manually:" -ForegroundColor Cyan
     Write-Host "npm config set @xarlizard:registry https://npm.pkg.github.com" -ForegroundColor White
-    Write-Host "npm config set //npm.pkg.github.com/:_authToken YOUR_GITHUB_TOKEN" -ForegroundColor White
+    Write-Host "npm login --scope=@xarlizard --registry=https://npm.pkg.github.com" -ForegroundColor White
 
 }
 catch {
