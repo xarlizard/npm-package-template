@@ -20,7 +20,7 @@ tooling.
 - **Modern Build System**: Rollup for optimized bundling (ESM + CJS)
 - **Automated Testing**: Jest with coverage reporting
 - **Code Quality**: ESLint with TypeScript support
-- **Automated Publishing**: GitHub Actions for NPM and GitHub Packages
+- **Automated Publishing**: GitHub Actions for NPM and GitHub Packages (using Trusted Publishing)
 - **Cross-Platform Scripts**: PowerShell and Node.js scripts
 - **Security**: Security policy and vulnerability reporting
 - **Documentation**: Comprehensive docs and examples
@@ -190,17 +190,36 @@ npm run release:major  # Major version
 
 ### Automated Publishing (Recommended)
 
+This template uses a **hybrid authentication approach**:
+- **Primary:** npm Trusted Publishing (OIDC) - secure, no tokens needed
+- **Fallback:** NPM_TOKEN secret - automatic fallback if Trusted Publishing fails
+
+**Setup (choose one):**
+
+**Option 1: Trusted Publishing (Recommended)**
+1. Enable Trusted Publishing in your npm account settings
+2. Link your GitHub repository to npm
+3. No secrets needed!
+
+**Option 2: NPM_TOKEN (Fallback)**
+1. Generate an npm access token
+2. Add `NPM_TOKEN` secret to your repository
+
+**Publishing:**
 1. Create a GitHub release
 2. GitHub Actions will automatically:
    - Run tests
    - Build the package
-   - Publish to NPM
+   - Publish to NPM (tries Trusted Publishing first, falls back to NPM_TOKEN if needed)
    - Publish to GitHub Packages
+
+See [`docs/TEMPLATE_SETUP.md`](docs/TEMPLATE_SETUP.md) for detailed setup instructions.
 
 ### Manual Publishing
 
 ```bash
-# Publish to NPM
+# Publish to NPM (requires npm login first)
+npm login
 npm publish
 
 # Publish to GitHub Packages

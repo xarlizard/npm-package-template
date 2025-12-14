@@ -48,11 +48,54 @@ Update the copied `package.json` from `templates/` with your actual information:
 
 ## 3. GitHub Repository Setup
 
-### Required Secrets
+### NPM Authentication (Hybrid Approach)
 
-Add these to your GitHub repository settings → Secrets and variables → Actions:
+This template uses a **hybrid authentication approach** that prioritizes security while maintaining flexibility:
 
-- `NPM_TOKEN`: Get from npmjs.com → Access Tokens → Generate New Token
+1. **Primary: Trusted Publishing (OIDC)** - Recommended, no tokens needed
+2. **Fallback: NPM_TOKEN** - Automatic fallback if Trusted Publishing fails
+
+#### Option 1: Trusted Publishing (Recommended)
+
+**Benefits:**
+- ✅ No access tokens needed
+- ✅ No 90-day expiration
+- ✅ More secure (OIDC-based)
+- ✅ No secrets to manage
+
+**Setup Steps:**
+
+1. **Enable Trusted Publishing in your npm account:**
+   - Go to [npmjs.com](https://www.npmjs.com) → Account Settings → Access Tokens
+   - Navigate to "Trusted Publishing" section
+   - Click "Add Trusted Publisher"
+   - Select "GitHub Actions" as the publisher
+   - Enter your GitHub organization/username and repository name
+   - Select the workflow file path: `.github/workflows/publish.yml`
+   - Click "Add"
+
+2. **That's it!** The workflow will automatically use Trusted Publishing.
+
+#### Option 2: NPM_TOKEN (Fallback)
+
+If Trusted Publishing is not set up or fails, the workflow will automatically fall back to using an `NPM_TOKEN` secret.
+
+**Setup Steps:**
+
+1. **Generate an npm access token:**
+   - Go to [npmjs.com](https://www.npmjs.com) → Account Settings → Access Tokens
+   - Click "Generate New Token"
+   - Select "Automation" type
+   - Copy the token
+
+2. **Add to GitHub Secrets:**
+   - Go to your repository → Settings → Secrets and variables → Actions
+   - Click "New repository secret"
+   - Name: `NPM_TOKEN`
+   - Value: Paste your npm token
+   - Click "Add secret"
+
+> **Note:** The workflow will try Trusted Publishing first, and only use `NPM_TOKEN` if Trusted Publishing fails. This gives you the best of both worlds: security by default, with a fallback option.
 
 ### Repository Settings
 
@@ -199,9 +242,15 @@ Follow GitHub's documentation to import the ruleset and apply it to your reposit
 
 If you encounter issues:
 
-1. Check the GitHub Actions logs
-2. Verify your NPM token is valid
-3. Ensure repository permissions are correct
-4. Check package.json configuration
+1. Check the GitHub Actions logs - they will show which authentication method was used
+2. **For Trusted Publishing:**
+   - Verify Trusted Publishing is configured correctly in your npm account
+   - Ensure the workflow path matches in npm settings: `.github/workflows/publish.yml`
+   - Check that repository permissions are correct (workflow needs `id-token: write` permission)
+3. **For NPM_TOKEN fallback:**
+   - Verify `NPM_TOKEN` secret is set in repository settings
+   - Ensure the token has "Automation" type and publish permissions
+   - Check token hasn't expired (tokens expire after 90 days)
+4. Check package.json configuration and package name availability
 
 Happy packaging! 🚀

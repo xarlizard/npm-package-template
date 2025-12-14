@@ -12,14 +12,42 @@ Publishes the package to npm and GitHub Packages when a release is published or 
 ## What It Does
 
 - Runs all tests, linting, and build steps.
-- Publishes to npm, first trying the unscoped name, then retrying with a scoped name using the GitHub username if
-  needed.
+- Publishes to npm using **Trusted Publishing** (OIDC authentication), first trying the unscoped name, then retrying with a scoped name using the GitHub username if needed.
 - Publishes to GitHub Packages with the correct dynamic scope and repo name.
 - All package names and scopes are inferred from the repository context.
+
+## Authentication
+
+### npm (Hybrid: Trusted Publishing + NPM_TOKEN Fallback)
+
+This workflow uses a **hybrid authentication approach**:
+
+1. **Primary: Trusted Publishing (OIDC)**
+   - Uses OpenID Connect (OIDC) - no access tokens needed
+   - Requires `id-token: write` permission (configured in workflow)
+   - More secure than traditional access tokens (no 90-day expiration)
+   - Setup: Enable Trusted Publishing in your npm account settings and link your GitHub repository
+
+2. **Fallback: NPM_TOKEN**
+   - Automatically used if Trusted Publishing fails
+   - Requires `NPM_TOKEN` secret in repository settings (optional)
+   - Provides backward compatibility and flexibility
+
+The workflow will:
+- First attempt to publish using Trusted Publishing
+- If that fails, automatically try with `NPM_TOKEN` (if available)
+- Provides clear logging about which authentication method was used
+
+### GitHub Packages
+
+Uses the built-in `GITHUB_TOKEN` for authentication (automatically provided by GitHub Actions).
 
 ## Usage
 
 - No hardcoded package names. The workflow is reusable for any repo.
+- **Setup options:**
+  - **Recommended:** Enable Trusted Publishing in your npm account (no secrets needed)
+  - **Alternative:** Add `NPM_TOKEN` secret to repository settings (automatic fallback)
 - To use, create a release or trigger the workflow manually from the Actions tab.
 
 # CI Workflow (`.github/workflows/ci.yml`)
