@@ -88,7 +88,23 @@ jobs:
           setup_token_auth() {
             if [ -n "$NPM_TOKEN" ]; then
               echo "🔑 Setting up NPM_TOKEN authentication..."
-              echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+              
+              # Prefer GitHub-provided NPM_CONFIG_USERCONFIG (set by setup-node) or fallback to ~/.npmrc
+              NPM_USER_CONFIG="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+              
+              # Ensure directory exists
+              mkdir -p "$(dirname "$NPM_USER_CONFIG")"
+              
+              # Override any existing auth with the provided NPM_TOKEN
+              {
+                echo "registry=https://registry.npmjs.org/"
+                echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN"
+                echo "always-auth=true"
+              } > "$NPM_USER_CONFIG"
+              
+              # Export for npm cli to pick it up
+              export NODE_AUTH_TOKEN="$NPM_TOKEN"
+              echo "✅ NPM_TOKEN configured at $NPM_USER_CONFIG"
               return 0
             else
               echo "⚠️  NPM_TOKEN not available, skipping token authentication"
