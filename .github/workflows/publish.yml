@@ -108,8 +108,8 @@ jobs:
             echo "✅ Published using $AUTH_METHOD"
           else
             echo "⚠️  Trusted Publishing failed, trying with scoped name..."
-            # Restore backup
-            mv package.json.backup package.json
+            # Restore backup (keep backup for later fallback attempts)
+            cp package.json.backup package.json
             
             # Step 2: Try with scoped name using Trusted Publishing
             node -e "
@@ -134,8 +134,8 @@ jobs:
               # Step 3: Fallback to NPM_TOKEN if available
               if setup_token_auth; then
                 AUTH_METHOD="NPM_TOKEN (fallback)"
-                # Restore original package.json and try again
-                mv package.json.backup package.json
+                # Restore original package.json and try again (leave backup intact)
+                cp package.json.backup package.json
                 
                 if try_publish; then
                   PUBLISH_SUCCESS=true
@@ -165,7 +165,7 @@ jobs:
           
           # Always restore original package.json if backup exists
           if [ -f package.json.backup ]; then
-            mv package.json.backup package.json
+            cp package.json.backup package.json
             echo "🔄 Restored original package.json"
           fi
           
